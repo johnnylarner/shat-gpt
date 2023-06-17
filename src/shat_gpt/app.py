@@ -1,7 +1,7 @@
 import os
 import chainlit as cl
 from dotenv import load_dotenv
-from langchain import OpenAI
+from langchain.llms import Cohere
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.vectorstores import Weaviate
 import weaviate
@@ -24,7 +24,7 @@ client = weaviate.Client(
 weaviate_instance = Weaviate(
     client=client, index_name=CLASS_NAME, text_key="text", attributes=["source"]
 )
-llm = OpenAI(model_name="text-davinci-003", temperature=0.0)
+llm = Cohere(cohere_api_key=API_KEY)
 
 template = """
 You're a search agent, that helps to find answers to the questions based on the MLOPs Community Database.

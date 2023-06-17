@@ -17,7 +17,7 @@ weaviate-client = "^3.20.1"
 chainlit = "^0.4.0"
 polars = "^0.18.3"
 openai = "^0.27.8"
-langchain = "^0.0.200"
+langchain = {extras = ["cohere"], version = "0.0.200"}
 python-dotenv = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
