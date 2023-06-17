@@ -3,3 +3,18 @@ logging:
   enabled: true
   format: "%(asctime)s.%(msecs)03d [%(levelname)s]: %(message)s"
   level: "INFO"
+
+schemas:
+  primary:
+    embedding_fields: [
+    "channel_name",
+    "text",
+    ]
+    meta_data_fields: [
+      "source",
+      "user_id",
+      "message_timestamp",
+      "thread_timstamp",
+      "channel_id",
+      "thread_id",
+    ]

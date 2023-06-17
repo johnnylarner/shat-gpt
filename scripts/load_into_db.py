@@ -1,4 +1,5 @@
 from pathlib import Path
+from shat_gpt.util import load_config
 
 import polars as pl
 
@@ -19,27 +20,14 @@ STANDARDIZED_CHAT_SCHEMA = {
 }
 
 
-META_DATA_FIELD = (
-    "source",
-    "user_id",
-    "message_timestamp",
-    "thread_timstamp",
-    "channel_id",
-    "thread_id",
-)
-
-EMBEDDING_FIELDS = (
-    "channel_name",
-    "text",
-)
-
-
 def add_original_text_field(df: pl.DataFrame, origin: str) -> pl.DataFrame:
     return df.with_columns((pl.lit(origin)).alias("origin"))
 
 
-def add_meta_data_columns_if_not_exist(df: pl.DataFrame) -> pl.DataFrame:
-    for column in META_DATA_FIELD:
+def add_meta_data_columns_if_not_exist(
+    df: pl.DataFrame, meta_cols: list[str]
+) -> pl.DataFrame:
+    for column in meta_cols:
         if column not in df.columns:
             df = df.with_columns(pl.lit(None).cast(str).alias(column))
     return df
@@ -50,17 +38,21 @@ def select_columns_alphabetically(df: pl.DataFrame) -> pl.DataFrame:
 
 
 def main():
+    schemas = load_config(REPO_ROOT / "config" / "config.yml").get("schemas")
+    primary_schema = schemas.get("primary")
+    meta_data_cols = primary_schema.get("meta_data_fields")
+
     raw_messages = pl.read_csv(REPO_ROOT / "data/messages.csv")
     messages = raw_messages.rename(STANDARDIZED_MESSAGE_SCHEMA)
     messages = add_original_text_field(messages, "messages")
-    messages = add_meta_data_columns_if_not_exist(messages)
+    messages = add_meta_data_columns_if_not_exist(messages, meta_data_cols)
     messages = select_columns_alphabetically(messages)
 
     raw_chats = pl.read_csv(REPO_ROOT / "data/chats.csv")
     chats = raw_chats.rename(STANDARDIZED_CHAT_SCHEMA)
     chats = add_original_text_field(chats, "chats")
     chats = chats.drop("")
-    chats = add_meta_data_columns_if_not_exist(chats)
+    chats = add_meta_data_columns_if_not_exist(chats, meta_data_cols)
     chats = select_columns_alphabetically(chats)
 
     all_data = pl.concat([messages, chats])
