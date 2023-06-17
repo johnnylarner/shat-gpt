@@ -11,7 +11,7 @@ import weaviate
 
 
 load_dotenv()
-API_KEY = os.environ.get("OPENAI_API_KEY")
+API_KEY = os.environ.get("COHERE_APIKEY")
 WEAVIATE_URL = os.environ["WEAVIATE_URL"]
 WEAVIATE_API_KEY = os.environ["WEAVIATE_API_KEY"]
 # provide class name, e.g. 'LangChain_(...)'
@@ -22,7 +22,7 @@ auth_config = weaviate.AuthApiKey(api_key=WEAVIATE_API_KEY)
 client = weaviate.Client(
     url=WEAVIATE_URL,
     auth_client_secret=auth_config,
-    additional_headers={"X-OpenAI-Api-Key": API_KEY},
+    additional_headers={"X-Cohere-Api-Key": API_KEY},
 )
 weaviate_instance = Weaviate(client=client, index_name=CLASS_NAME, text_key="text")
 

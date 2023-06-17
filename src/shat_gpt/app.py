@@ -11,7 +11,7 @@ load_dotenv()
 API_KEY = os.environ.get("OPENAI_API_KEY")
 WEAVIATE_URL = os.environ["WEAVIATE_URL"]
 
-llm = OpenAI(model_name="text-davinci-003", temperature=0.7)
+llm = OpenAI(model_name="text-davinci-003", temperature=0)
 
 
 tools = [CustomSearchTool()]
@@ -20,23 +20,23 @@ agent = initialize_agent(
 )
 
 template = """
-You're a friendly search tool
+You're a search agent, that helps to find answers to the questions based on the MLOPs Community Database.
 Question: {question}
-
-Answer: Let's think step by step."""
+"""
 
 
 @cl.langchain_factory(use_async=False)
 def main():
     llm = OpenAI(temperature=0)
-    chain = LLMChain(llm=llm, prompt=PromptTemplate.from_template(template))
+    prompt = PromptTemplate(template=template, input_variables=["question"])
+    chain = LLMChain(llm=llm, prompt=prompt)
     return chain
 
 
-# @cl.langchain_run
-# async def run(input_str):
-#     res = await cl.make_async(agent)(
-#         input_str, callbacks=[cl.ChainlitCallbackHandler()]
-#     )
-#     print(res)
-#     await cl.Message(content=res["output"]).send()
+@cl.langchain_run
+async def run(input_str):
+    res = await cl.make_async(agent)(
+        input_str, callbacks=[cl.ChainlitCallbackHandler()]
+    )
+    print(res)
+    await cl.Message(content=res["output"]).send()
