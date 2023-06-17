@@ -6,54 +6,57 @@ CLASS_NAME = "TextItem"
 CLASS = {
     "class": CLASS_NAME,
     "description": "A class called document",
-    "vectorizer": "text2vec-openai",
-    "moduleConfig": {
-        "text2vec-openai": {"model": "ada", "modelVersion": "002", "type": "text"}
+    "vectorizer": "text2vec-cohere",
+    "moduleConfig": {  # specify the vectorizer and model type you're using
+        "text2vec-cohere": {
+            "model": "multilingual-22-12",  # defaults to multilingual-22-12 if not set
+            "truncate": "RIGHT",  # defaults to RIGHT if not set
+        }
     },
     "properties": [
         {
             "name": "channel_name",
             "dataType": ["text"],
             "moduleConfig": {
-                "text2vec-openai": {"skip": False, "vectorizePropertyName": True}
+                "text2vec-cohere": {"skip": False, "vectorizePropertyName": True}
             },
         },
         {
             "name": "text",
             "dataType": ["text"],
             "moduleConfig": {
-                "text2vec-openai": {"skip": False, "vectorizePropertyName": True}
+                "text2vec-cohere": {"skip": False, "vectorizePropertyName": True}
             },
         },
         {
             "name": "source",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
         {
             "name": "user_id",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
         {
             "name": "message_timestamp",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
         {
             "name": "thread_timstamp",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
         {
             "name": "channel_id",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
         {
             "name": "thread_id",
             "dataType": ["text"],
-            "moduleConfig": {"text2vec-openai": {"skip": True}},
+            "moduleConfig": {"text2vec-cohere": {"skip": True}},
         },
     ],
 }
@@ -66,7 +69,7 @@ def main():
     client = weaviate.Client(
         url=secrets.weaviate_url,
         auth_client_secret=auth,
-        additional_headers={"X-OpenAI-Api-Key": secrets.openai_api_key},
+        additional_headers={"X-Cohere-Api-Key": secrets.cohere_api_key},
     )
 
     if client.schema.exists(CLASS_NAME):

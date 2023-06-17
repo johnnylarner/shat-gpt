@@ -17,11 +17,13 @@ def main():
         weaviate_url = input("Please provide the Weaviate URL: ")
         weaviate_api_key = input("Please provide the Weaviate API key: ")
         openai_api_key = input("Please provide the OpenAI API key: ")
+        cohere_api_key = input("Please provide the Cohere API key: ")
 
         pairs_to_write = {
             "WEAVIATE_URL": weaviate_url,
             "WEAVIATE_API_KEY": weaviate_api_key,
             "OPENAI_API_KEY": openai_api_key,
+            "COHERE_API_KEY": cohere_api_key,
         }
 
         for key, value in pairs_to_write.items():

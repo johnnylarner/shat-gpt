@@ -9,6 +9,7 @@ class Secrets:
     weaviate_url: str
     weaviate_api_key: str
     openai_api_key: str
+    cohere_api_key: str
 
 
 def load_secrets() -> Secrets:
@@ -24,4 +25,5 @@ def load_secrets() -> Secrets:
         weaviate_url=env["WEAVIATE_URL"],
         weaviate_api_key=env["WEAVIATE_API_KEY"],
         openai_api_key=env["OPENAI_API_KEY"],
+        cohere_api_key=env["COHERE_API_KEY"],
     )

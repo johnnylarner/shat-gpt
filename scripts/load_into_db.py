@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 
 import weaviate
 from shat_gpt.secrets import load_secrets
@@ -69,13 +70,18 @@ def main():
     client = weaviate.Client(
         url=secrets.weaviate_url,
         auth_client_secret=auth,
-        additional_headers={"X-OpenAI-Api-Key": secrets.openai_api_key},
+        additional_headers={"X-Cohere-Api-Key": secrets.cohere_api_key},
     )
-    batch_size = 100
-    with client.batch as batch:
-        batch.batch_size = batch_size
-        for row in all_data.head(50).iter_rows(named=True):
-            client.batch.add_data_object(row, "TextItem")
+
+    for row in all_data.head(10_000).iter_rows(named=True):
+        try:
+            print("Sending object")
+            client.data_object.create(row, "TextItem")
+            time.sleep(0.6)
+        except weaviate.exceptions.UnexpectedStatusCodeException:
+            print("Rate limit reached, sleeping for 10 secs.")
+            time.sleep(10)
+            client.data_object.create(row, "TextItem")
 
 
 if __name__ == "__main__":
