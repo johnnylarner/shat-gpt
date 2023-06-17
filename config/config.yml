@@ -18,27 +18,57 @@ schemas:
       "channel_id",
       "thread_id",
     ]
-    config:
-      class: shat_index
-      description: Some
-      properties:
-        - name: channel_name
-          dataType: [text]
-          moduleConfig:
-            tokenizer: word
-        - name: text
-          dataType: [text]
-          moduleConfig:
-            tokenizer: word
-        - name: source
-          dataType: [text]
-        - name: user_id
-          dataType: [text]
-        - name: message_timestamp
-          dataType: [text]
-        - name: thread_timstamp
-          dataType: [text]
-        - name: channel_id
-          dataType: [text]
-        - name: thread_id
-          dataType: [text]
+    config: {
+    "class": "TextItem",
+    "description": "A class called document",
+    "vectorizer": "text2vec-openai",
+    "moduleConfig": {
+        "text2vec-openai": {"model": "ada", "modelVersion": "002", "type": "text"}
+    },
+    "properties": [
+        {
+            "name": "channel_name",
+            "dataType": ["text"],
+            "moduleConfig": {
+                "text2vec-openai": {"skip": False, "vectorizePropertyName": True}
+            },
+        },
+        {
+            "name": "text",
+            "dataType": ["text"],
+            "moduleConfig": {
+                "text2vec-openai": {"skip": False, "vectorizePropertyName": True}
+            },
+        },
+        {
+            "name": "source",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+        {
+            "name": "user_id",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+        {
+            "name": "message_timestamp",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+        {
+            "name": "thread_timstamp",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+        {
+            "name": "channel_id",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+        {
+            "name": "thread_id",
+            "dataType": ["text"],
+            "moduleConfig": {"text2vec-openai": {"skip": True}},
+        },
+    ],
+}

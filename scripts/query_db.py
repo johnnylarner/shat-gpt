@@ -11,7 +11,7 @@ WEAVIATE_URL = os.environ["WEAVIATE_URL"]
 WEAVIATE_API_KEY = os.environ["WEAVIATE_API_KEY"]
 
 # provide class name, e.g. 'LangChain_(...)'
-CLASS_NAME = "LangChain_35f237fe6ad54b7ea80682d55e5d28e4"  # 35f2... is class name of our dummy index
+CLASS_NAME = "TextItem"  # 35f2... is class name of our dummy index
 auth_config = weaviate.AuthApiKey(api_key=WEAVIATE_API_KEY)
 
 # Instantiate the client with the auth config

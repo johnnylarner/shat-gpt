@@ -1,4 +1,7 @@
 from pathlib import Path
+
+import weaviate
+from shat_gpt.secrets import load_secrets
 from shat_gpt.util import load_default_config
 
 import polars as pl
@@ -60,6 +63,19 @@ def main():
     all_data = pl.read_parquet(REPO_ROOT / "data/all_data.parquet")
 
     print(all_data)
+
+    secrets = load_secrets()
+    auth = weaviate.AuthApiKey(secrets.weaviate_api_key)
+    client = weaviate.Client(
+        url=secrets.weaviate_url,
+        auth_client_secret=auth,
+        additional_headers={"X-OpenAI-Api-Key": secrets.openai_api_key},
+    )
+    batch_size = 100
+    with client.batch as batch:
+        batch.batch_size = batch_size
+        for row in all_data.head(50).iter_rows(named=True):
+            client.batch.add_data_object(row, "TextItem")
 
 
 if __name__ == "__main__":
