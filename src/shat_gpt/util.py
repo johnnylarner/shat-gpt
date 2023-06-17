@@ -1,3 +1,4 @@
+import functools
 import logging
 from pathlib import Path
 from typing import Any, Dict, Union
@@ -6,6 +7,8 @@ import pkg_resources
 import yaml
 
 logger = logging.getLogger("shat_gpt")
+REPO_ROOT = Path(__file__).parent.parent.parent
+CONFIG_PATH = REPO_ROOT / "config" / "config.yml"
 
 
 def get_resource_string(path: str, decode=True) -> Union[str, bytes]:
@@ -46,3 +49,6 @@ def logging_setup(config: Dict):
         level = logging.NOTSET
     logging.basicConfig(format=fmt, level=logging.WARNING)
     logger.setLevel(level)
+
+
+load_default_config = functools.partial(load_config, CONFIG_PATH)

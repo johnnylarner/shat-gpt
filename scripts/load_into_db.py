@@ -1,5 +1,5 @@
 from pathlib import Path
-from shat_gpt.util import load_config
+from shat_gpt.util import load_default_config
 
 import polars as pl
 
@@ -38,7 +38,7 @@ def select_columns_alphabetically(df: pl.DataFrame) -> pl.DataFrame:
 
 
 def main():
-    schemas = load_config(REPO_ROOT / "config" / "config.yml").get("schemas")
+    schemas = load_default_config().get("schemas")
     primary_schema = schemas.get("primary")
     meta_data_cols = primary_schema.get("meta_data_fields")
 
