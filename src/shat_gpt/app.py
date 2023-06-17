@@ -40,3 +40,13 @@ def main():
         llm, chain_type="stuff", retriever=weaviate_instance.as_retriever()
     )
     return chain
+
+
+@cl.langchain_postprocess
+async def postprocess(output: str):
+    print(output)
+    output = f"""
+    Answer: {output["answer"]}
+    Source: {output["sources"]}
+    """
+    await cl.Message(content=output).send()
