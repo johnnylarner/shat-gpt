@@ -16,18 +16,22 @@ agent = initialize_agent(
 )
 
 template = """
-You're a friendly
+You're a friendly search tool
 Question: {question}
 
 Answer: Let's think step by step."""
 
 
-@cl.langchain_factory(use_async=True)
-def factory():
-    prompt = PromptTemplate(template=template, input_variables=["question"])
-    tools = [CustomSearchTool()]
-    agent = initialize_agent(
-        tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
-    )
+@cl.langchain_factory(use_async=False)
+def main():
+    llm = OpenAI(temperature=0)
+    chain = LLMChain(llm=llm, prompt=PromptTemplate.from_template(template))
+    return chain
 
-    return agent.run(prompt)
+
+@cl.langchain_run
+async def run(input_str):
+    res = await cl.make_async(agent)(
+        input_str, callbacks=[cl.ChainlitCallbackHandler()]
+    )
+    await cl.Message(content=res["text"]).send()
